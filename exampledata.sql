@@ -2,15 +2,12 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-DROP SCHEMA IF EXISTS `controlbay` ;
 CREATE SCHEMA IF NOT EXISTS `controlbay` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `controlbay` ;
 
 -- -----------------------------------------------------
 -- Table `controlbay`.`customer`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`customer` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`customer` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `username` VARCHAR(255) NOT NULL ,
@@ -24,20 +21,18 @@ AUTO_INCREMENT = 2;
 -- -----------------------------------------------------
 -- Table `controlbay`.`admin_token`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`admin_token` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`admin_token` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `customer_id` INT(11) NOT NULL ,
   `ip` VARCHAR(255) NOT NULL ,
   `token` VARCHAR(255) NOT NULL ,
   `expiration` VARCHAR(255) NOT NULL ,
   `user_agent` VARCHAR(255) NOT NULL ,
-  `customer_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `admin_token_customer` (`customer_id` ASC) ,
   CONSTRAINT `admin_token_customer`
-    FOREIGN KEY ()
-    REFERENCES `controlbay`.`customer` ()
+    FOREIGN KEY (`customer_id` )
+    REFERENCES `controlbay`.`customer` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -47,8 +42,6 @@ AUTO_INCREMENT = 1;
 -- -----------------------------------------------------
 -- Table `controlbay`.`infoscreen`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`infoscreen` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`infoscreen` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `customer_id` INT(11) NOT NULL ,
@@ -74,8 +67,6 @@ AUTO_INCREMENT = 2;
 -- -----------------------------------------------------
 -- Table `controlbay`.`job`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`job` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`job` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(30) NOT NULL ,
@@ -88,8 +79,6 @@ AUTO_INCREMENT = 3;
 -- -----------------------------------------------------
 -- Table `controlbay`.`jobtab`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`jobtab` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`jobtab` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `infoscreen_id` INT(11) NOT NULL ,
@@ -121,8 +110,6 @@ AUTO_INCREMENT = 3;
 -- -----------------------------------------------------
 -- Table `controlbay`.`public_token`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`public_token` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`public_token` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `infoscreen_id` INT(11) NOT NULL ,
@@ -143,47 +130,51 @@ AUTO_INCREMENT = 1;
 
 
 -- -----------------------------------------------------
--- Table `controlbay`.`turtle_option`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`turtle_option` ;
-
-CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_option` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `key` VARCHAR(20) NOT NULL ,
-  `value` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 4;
-
-
--- -----------------------------------------------------
 -- Table `controlbay`.`turtle`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`turtle` ;
-
 CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `module` VARCHAR(255) NOT NULL ,
-  `colspan` INT(2) NOT NULL ,
+  `type` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 4;
 
 
 -- -----------------------------------------------------
--- Table `controlbay`.`turtle_link`
+-- Table `controlbay`.`pane`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`turtle_link` ;
+CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
+  `id` INT NOT NULL AUTO_INCREMENT ,
+  `infoscreen_id` INT NOT NULL ,
+  `type` VARCHAR(255) NOT NULL ,
+  `title` VARCHAR(50) NULL ,
+  `interval` INT NULL ,
+  `group` INT NULL ,
+  PRIMARY KEY (`id`) ,
+  INDEX `pane_infoscreen` (`infoscreen_id` ASC) ,
+  CONSTRAINT `pane_infoscreen`
+    FOREIGN KEY (`infoscreen_id` )
+    REFERENCES `controlbay`.`infoscreen` (`id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+AUTO_INCREMENT = 5;
 
-CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_link` (
+
+-- -----------------------------------------------------
+-- Table `controlbay`.`turtle_instance`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_instance` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `infoscreen_id` INT NOT NULL ,
   `turtle_id` INT NOT NULL ,
-  `turtle_option_id` INT NOT NULL ,
+  `pane_id` INT NOT NULL ,
+  `colspan` INT NOT NULL DEFAULT 1 ,
+  `order` INT NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `turtle_link_infoscreen` (`infoscreen_id` ASC) ,
   INDEX `turtle_link_turtle` (`turtle_id` ASC) ,
-  INDEX `turtle_link_turtle_option` (`turtle_option_id` ASC) ,
+  INDEX `turtle_link_pane` (`pane_id` ASC) ,
   CONSTRAINT `turtle_link_infoscreen`
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `controlbay`.`infoscreen` (`id` )
@@ -194,9 +185,9 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_link` (
     REFERENCES `controlbay`.`turtle` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `turtle_link_turtle_option`
-    FOREIGN KEY (`turtle_option_id` )
-    REFERENCES `controlbay`.`turtle_option` (`id` )
+  CONSTRAINT `turtle_link_pane`
+    FOREIGN KEY (`pane_id` )
+    REFERENCES `controlbay`.`pane` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -204,60 +195,22 @@ AUTO_INCREMENT = 4;
 
 
 -- -----------------------------------------------------
--- Table `controlbay`.`pane`
+-- Table `controlbay`.`turtle_option`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`pane` ;
-
-CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `type` VARCHAR(255) NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `controlbay`.`pane_option`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`pane_option` ;
-
-CREATE  TABLE IF NOT EXISTS `controlbay`.`pane_option` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
+CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_option` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `turtle_link_id` INT NOT NULL ,
   `key` VARCHAR(20) NOT NULL ,
   `value` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `controlbay`.`pane_link`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `controlbay`.`pane_link` ;
-
-CREATE  TABLE IF NOT EXISTS `controlbay`.`pane_link` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `infoscreen_id` INT NOT NULL ,
-  `pane_id` INT NOT NULL ,
-  `pane_option_id` INT NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `pane_link_pane` (`pane_id` ASC) ,
-  INDEX `pane_link_pane_option` (`pane_option_id` ASC) ,
-  INDEX `pane_link_infoscreen` (`infoscreen_id` ASC) ,
-  CONSTRAINT `pane_link_pane`
-    FOREIGN KEY (`pane_id` )
-    REFERENCES `controlbay`.`pane` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `pane_link_pane_option`
-    FOREIGN KEY (`pane_option_id` )
-    REFERENCES `controlbay`.`pane_option` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `pane_link_infoscreen`
-    FOREIGN KEY (`infoscreen_id` )
-    REFERENCES `controlbay`.`infoscreen` (`id` )
+  INDEX `turtle_option_turtle_link` (`turtle_link_id` ASC) ,
+  CONSTRAINT `turtle_option_turtle_link`
+    FOREIGN KEY (`turtle_link_id` )
+    REFERENCES `controlbay`.`turtle_instance` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+ENGINE = InnoDB
+AUTO_INCREMENT = 5;
 
 
 
@@ -270,7 +223,7 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`customer` (`id`, `username`, `password`) VALUES (1, 'michiel', NULL);
+INSERT INTO `controlbay`.`customer` (`id`, `username`, `password`) VALUES (1, 'michiel', 'encrypted');
 
 COMMIT;
 
@@ -304,34 +257,49 @@ INSERT INTO `controlbay`.`jobtab` (`id`, `infoscreen_id`, `job_id`, `minutes`, `
 COMMIT;
 
 -- -----------------------------------------------------
--- Data for table `controlbay`.`turtle_option`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_option` (`id`, `key`, `value`) VALUES (1, 'order', '1');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `key`, `value`) VALUES (2, 'order', '2');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `key`, `value`) VALUES (3, 'order', '3');
-
-COMMIT;
-
--- -----------------------------------------------------
 -- Data for table `controlbay`.`turtle`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle` (`id`, `module`, `colspan`) VALUES (1, 'airport', 1);
-INSERT INTO `controlbay`.`turtle` (`id`, `module`, `colspan`) VALUES (2, 'nmbs', 1);
-INSERT INTO `controlbay`.`turtle` (`id`, `module`, `colspan`) VALUES (3, 'map', 1);
+INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (1, 'airport');
+INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (2, 'nmbs');
+INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (3, 'map');
 
 COMMIT;
 
 -- -----------------------------------------------------
--- Data for table `controlbay`.`turtle_link`
+-- Data for table `controlbay`.`pane`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_link` (`id`, `infoscreen_id`, `turtle_id`, `turtle_option_id`) VALUES (1, 1, 1, 1);
-INSERT INTO `controlbay`.`turtle_link` (`id`, `infoscreen_id`, `turtle_id`, `turtle_option_id`) VALUES (2, 1, 2, 2);
-INSERT INTO `controlbay`.`turtle_link` (`id`, `infoscreen_id`, `turtle_id`, `turtle_option_id`) VALUES (3, 1, 3, 3);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (1, 1, 'list', NULL, NULL, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (2, 1, 'widget', 'Social', 1500, 1);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (3, 1, 'widget', 'News', 1500, 1);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (4, 1, 'widget', 'Location', 1500, 1);
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `controlbay`.`turtle_instance`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `controlbay`;
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (1, 1, 1, 1, 1, 1);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (2, 1, 2, 1, 1, 2);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (3, 1, 3, 1, 1, 3);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (4, 1, 2, 2, 1, 0);
+
+COMMIT;
+
+-- -----------------------------------------------------
+-- Data for table `controlbay`.`turtle_option`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `controlbay`;
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (1, 1, 'location', 'Brussel');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (2, 2, 'location', 'Gent');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (3, 3, 'location', 'Mechelen');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (4, 1, 'type', 'departures');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (5, 4, 'location', 'Brussel');
 
 COMMIT;
