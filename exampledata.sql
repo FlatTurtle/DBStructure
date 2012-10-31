@@ -150,6 +150,7 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
   `title` VARCHAR(50) NULL ,
   `interval` INT NULL ,
   `group` INT NULL ,
+  `colspan` SMALLINT NOT NULL DEFAULT 1 ,
   PRIMARY KEY (`id`) ,
   INDEX `pane_infoscreen` (`infoscreen_id` ASC) ,
   CONSTRAINT `pane_infoscreen`
@@ -169,7 +170,6 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_instance` (
   `infoscreen_id` INT NOT NULL ,
   `turtle_id` INT NOT NULL ,
   `pane_id` INT NOT NULL ,
-  `colspan` INT NOT NULL DEFAULT 1 ,
   `order` INT NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `turtle_link_infoscreen` (`infoscreen_id` ASC) ,
@@ -272,10 +272,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (1, 1, 'list', NULL, NULL, NULL);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (2, 1, 'widget', 'Social', 1500, 1);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (3, 1, 'widget', 'News', 1500, 1);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`) VALUES (4, 1, 'widget', 'Location', 1500, 1);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (1, 1, 'list', NULL, NULL, NULL, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (2, 1, 'widget', 'Social', 1500, 1, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (3, 1, 'widget', 'News', 1500, 1, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (4, 1, 'widget', 'Location', 1500, 1, NULL);
 
 COMMIT;
 
@@ -284,10 +284,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (1, 1, 1, 1, 1, 1);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (2, 1, 2, 1, 1, 2);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (3, 1, 3, 1, 1, 3);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `colspan`, `order`) VALUES (4, 1, 2, 2, 1, 0);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (1, 1, 1, 1, 1);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (2, 1, 2, 1, 2);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (3, 1, 3, 1, 3);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (4, 1, 2, 2, 0);
 
 COMMIT;
 
