@@ -199,13 +199,13 @@ AUTO_INCREMENT = 4;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_option` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `turtle_link_id` INT NOT NULL ,
+  `turtle_instance_id` INT NOT NULL ,
   `key` VARCHAR(20) NOT NULL ,
   `value` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `turtle_option_turtle_link` (`turtle_link_id` ASC) ,
+  INDEX `turtle_option_turtle_instance` (`turtle_instance_id` ASC) ,
   CONSTRAINT `turtle_option_turtle_link`
-    FOREIGN KEY (`turtle_link_id` )
+    FOREIGN KEY (`turtle_instance_id` )
     REFERENCES `controlbay`.`turtle_instance` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -296,10 +296,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (1, 1, 'location', 'Brussel');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (2, 2, 'location', 'Gent');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (3, 3, 'location', 'Mechelen');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (4, 1, 'type', 'departures');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_link_id`, `key`, `value`) VALUES (5, 4, 'location', 'Brussel');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (1, 1, 'location', 'Brussel');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (2, 2, 'location', 'Gent');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (3, 3, 'location', 'Mechelen');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (4, 1, 'type', 'departures');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (5, 4, 'location', 'Brussel');
 
 COMMIT;
