@@ -5,7 +5,7 @@ The database structure of the FlatTurtle system
 
 * [Michiel Vancoillie](http://twitter.com/ntynmichiel) (project leader)
 
-Model can be openend with MySQL Workbench
+Models (*.mwb) can be opened with MySQL Workbench
 
 Tools used
 ==========
