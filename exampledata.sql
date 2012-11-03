@@ -50,9 +50,8 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`infoscreen` (
   `logo` VARCHAR(255) NULL DEFAULT NULL ,
   `color` VARCHAR(10) NULL DEFAULT NULL ,
   `lang` VARCHAR(10) NULL DEFAULT NULL ,
-  `interval` INT(11) NOT NULL DEFAULT '15000' ,
   `hostname` VARCHAR(255) NOT NULL ,
-  `pincode` INT(11) NOT NULL ,
+  `pincode` INT(11) NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `customer_id` (`customer_id` ASC) ,
   INDEX `alias` (`alias` ASC) ,
@@ -147,10 +146,9 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `infoscreen_id` INT NOT NULL ,
   `type` VARCHAR(255) NOT NULL ,
-  `title` VARCHAR(50) NULL ,
-  `interval` INT NULL ,
-  `group` INT NULL ,
   `colspan` SMALLINT NOT NULL DEFAULT 1 ,
+  `interval` INT NOT NULL DEFAULT 15000 ,
+  `title` VARCHAR(50) NULL ,
   PRIMARY KEY (`id`) ,
   INDEX `pane_infoscreen` (`infoscreen_id` ASC) ,
   CONSTRAINT `pane_infoscreen`
@@ -213,6 +211,19 @@ ENGINE = InnoDB
 AUTO_INCREMENT = 5;
 
 
+-- -----------------------------------------------------
+-- Table `controlbay`.`session`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `controlbay`.`session` (
+  `session_id` VARCHAR(40) NOT NULL DEFAULT 0 ,
+  `ip_address` VARCHAR(16) NOT NULL DEFAULT 0 ,
+  `user_agent` VARCHAR(120) NOT NULL ,
+  `last_activity` INT(11) NOT NULL ,
+  `user_data` TEXT NOT NULL ,
+  PRIMARY KEY (`session_id`) )
+ENGINE = InnoDB;
+
+
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -232,7 +243,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`infoscreen` (`id`, `customer_id`, `title`, `alias`, `logo`, `color`, `lang`, `interval`, `hostname`, `pincode`) VALUES (1, 1, 'The Hub', 'hub', 'logo.jpg', '#FB8B1A', 'en', 15000, 'efikamx-5fb019', 111222);
+INSERT INTO `controlbay`.`infoscreen` (`id`, `customer_id`, `title`, `alias`, `logo`, `color`, `lang`, `hostname`, `pincode`) VALUES (1, 1, 'The Hub', 'hub', 'logo.jpg', '#FB8B1A', 'en', 'efikamx-5fb019', 111222);
 
 COMMIT;
 
@@ -272,10 +283,10 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (1, 1, 'list', NULL, NULL, NULL, NULL);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (2, 1, 'widget', 'Social', 1500, 1, NULL);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (3, 1, 'widget', 'News', 1500, 1, NULL);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `title`, `interval`, `group`, `colspan`) VALUES (4, 1, 'widget', 'Location', 1500, 1, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (1, 1, 'list', NULL, NULL, NULL);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (2, 1, 'widget', NULL, 1500, 'Social');
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (3, 1, 'widget', NULL, 1500, 'News');
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (4, 1, 'widget', NULL, 1500, 'Location');
 
 COMMIT;
 
