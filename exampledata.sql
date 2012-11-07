@@ -149,6 +149,7 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
   `colspan` SMALLINT NOT NULL DEFAULT 1 ,
   `interval` INT NOT NULL DEFAULT 15000 ,
   `title` VARCHAR(50) NULL ,
+  `order` SMALLINT NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `pane_infoscreen` (`infoscreen_id` ASC) ,
   CONSTRAINT `pane_infoscreen`
@@ -157,7 +158,7 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`pane` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 5;
+AUTO_INCREMENT = 7;
 
 
 -- -----------------------------------------------------
@@ -189,7 +190,7 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_instance` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 6;
+AUTO_INCREMENT = 7;
 
 
 -- -----------------------------------------------------
@@ -208,7 +209,7 @@ CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle_option` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 7;
+AUTO_INCREMENT = 9;
 
 
 -- -----------------------------------------------------
@@ -262,7 +263,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`infoscreen` (`id`, `customer_id`, `title`, `alias`, `logo`, `color`, `lang`, `hostname`, `pincode`) VALUES (1, 1, 'The Hub', 'hub', 'logo.jpg', '#FB8B1A', 'en', 'efikamx-5fb019', 111222);
+INSERT INTO `controlbay`.`infoscreen` (`id`, `customer_id`, `title`, `alias`, `logo`, `color`, `lang`, `hostname`, `pincode`) VALUES (1, 1, 'The Hub', 'hub', 'logo.jpg', '#1c89bc', 'en', 'efikamx-5fb019', 111222);
 
 COMMIT;
 
@@ -304,10 +305,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (1, 1, 'list', 1, 15000, NULL);
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (2, 1, 'widget', 1, 15000, 'Social');
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (3, 1, 'widget', 1, 15000, 'News');
-INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`) VALUES (4, 1, 'widget', 1, 15000, 'Location');
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (1, 1, 'list', 1, 15000, NULL, 1);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (2, 1, 'list', 1, 15000, NULL, 2);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (3, 1, 'list', 1, 15000, NULL, 3);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (4, 1, 'widget', 1, 15000, 'Social', 1);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (5, 1, 'widget', 1, 15000, 'News', 2);
+INSERT INTO `controlbay`.`pane` (`id`, `infoscreen_id`, `type`, `colspan`, `interval`, `title`, `order`) VALUES (6, 1, 'widget', 1, 15000, 'Location', 3);
 
 COMMIT;
 
@@ -316,11 +319,12 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (1, 1, 1, 1, 1);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (2, 1, 2, 1, 2);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (3, 1, 3, 1, 4);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (4, 1, 4, 1, 3);
-INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (5, 1, 5, 2, 0);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (1, 1, 4, 1, 1);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (2, 1, 2, 1, 3);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (3, 1, 2, 1, 2);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (4, 1, 3, 2, 0);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (5, 1, 1, 3, 0);
+INSERT INTO `controlbay`.`turtle_instance` (`id`, `infoscreen_id`, `turtle_id`, `pane_id`, `order`) VALUES (6, 1, 5, 4, 0);
 
 COMMIT;
 
@@ -329,12 +333,14 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (1, 1, 'location', 'Brussel');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (2, 2, 'location', 'Gent');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (3, 3, 'location', 'Mechelen');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (4, 1, 'type', 'departures');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (5, 4, 'location', '43050');
-INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (6, 5, 'search', 'irail');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (1, 1, 'location', '43050');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (2, 2, 'location', 'Brussel');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (3, 3, 'location', 'Gent');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (4, 4, 'location', 'Emile Braunplein 8, Gent');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (5, 5, 'location', 'BRU');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (6, 5, 'type', 'departures');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (7, 6, 'search', 'irail');
+INSERT INTO `controlbay`.`turtle_option` (`id`, `turtle_instance_id`, `key`, `value`) VALUES (8, 4, 'zoom', '16');
 
 COMMIT;
 
