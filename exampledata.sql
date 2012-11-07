@@ -133,10 +133,12 @@ AUTO_INCREMENT = 1;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `controlbay`.`turtle` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `name` VARCHAR(45) NOT NULL ,
   `type` VARCHAR(255) NOT NULL ,
+  `options` TEXT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 6;
+AUTO_INCREMENT = 9;
 
 
 -- -----------------------------------------------------
@@ -292,11 +294,14 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `controlbay`;
-INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (1, 'airport');
-INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (2, 'nmbs');
-INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (3, 'map');
-INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (4, 'delijn');
-INSERT INTO `controlbay`.`turtle` (`id`, `type`) VALUES (5, 'twitter');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (1, 'Airport', 'airport', 'location');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (2, 'NMBS', 'nmbs', 'location');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (3, 'Map', 'map', 'location, zoom');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (4, 'De Lijn', 'delijn', 'location');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (5, 'Twitter', 'twitter', 'search');
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (6, 'Finance', 'finance', NULL);
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (7, 'RSS', 'rss', NULL);
+INSERT INTO `controlbay`.`turtle` (`id`, `name`, `type`, `options`) VALUES (8, 'Signage', 'signage', NULL);
 
 COMMIT;
 
