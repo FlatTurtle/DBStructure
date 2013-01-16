@@ -208,7 +208,6 @@ AUTO_INCREMENT = 1;
 CREATE  TABLE IF NOT EXISTS `turtle_option` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `turtle_instance_id` INT(11) NOT NULL ,
-  `group` VARCHAR(45) NULL DEFAULT NULL ,
   `key` VARCHAR(45) NOT NULL ,
   `value` TEXT NOT NULL ,
   PRIMARY KEY (`id`) ,
