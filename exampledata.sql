@@ -31,8 +31,8 @@ CREATE  TABLE IF NOT EXISTS `admin_token` (
   CONSTRAINT `admin_token_customer`
     FOREIGN KEY (`customer_id` )
     REFERENCES `customer` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1;
 
@@ -62,7 +62,8 @@ CREATE  TABLE IF NOT EXISTS `infoscreen` (
   CONSTRAINT `infoscreen_customer`
     FOREIGN KEY (`customer_id` )
     REFERENCES `customer` (`id` )
-    ON DELETE CASCADE)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8
@@ -101,13 +102,13 @@ CREATE  TABLE IF NOT EXISTS `jobtab` (
   CONSTRAINT `jobtab_infoscreen`
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `infoscreen` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `jobtab_job`
     FOREIGN KEY (`job_id` )
     REFERENCES `job` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 3;
 
@@ -128,8 +129,8 @@ CREATE  TABLE IF NOT EXISTS `public_token` (
   CONSTRAINT `public_token_infoscreen`
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `infoscreen` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1;
 
@@ -158,6 +159,7 @@ CREATE  TABLE IF NOT EXISTS `pane` (
   `colspan` SMALLINT NOT NULL DEFAULT 1 ,
   `duration` INT NOT NULL DEFAULT 15000 ,
   `title` VARCHAR(50) NULL ,
+  `template` VARCHAR(50) NULL ,
   `order` SMALLINT NOT NULL DEFAULT 0 ,
   PRIMARY KEY (`id`) ,
   INDEX `pane_infoscreen` (`infoscreen_id` ASC) ,
@@ -165,7 +167,7 @@ CREATE  TABLE IF NOT EXISTS `pane` (
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `infoscreen` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 2;
 
@@ -187,17 +189,17 @@ CREATE  TABLE IF NOT EXISTS `turtle_instance` (
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `infoscreen` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `turtle_link_turtle`
     FOREIGN KEY (`turtle_id` )
     REFERENCES `turtle` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `turtle_link_pane`
     FOREIGN KEY (`pane_id` )
     REFERENCES `pane` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1;
 
@@ -215,8 +217,8 @@ CREATE  TABLE IF NOT EXISTS `turtle_option` (
   CONSTRAINT `turtle_option_turtle_link`
     FOREIGN KEY (`turtle_instance_id` )
     REFERENCES `turtle_instance` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8
@@ -250,8 +252,8 @@ CREATE  TABLE IF NOT EXISTS `plugin` (
   CONSTRAINT `plugin_infoscreen`
     FOREIGN KEY (`infoscreen_id` )
     REFERENCES `infoscreen` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 2;
 
@@ -265,7 +267,7 @@ CREATE  TABLE IF NOT EXISTS `option` (
   `value` LONGTEXT NOT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
@@ -317,16 +319,16 @@ INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (1, 
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (2, 'NMBS', 'nmbs', 1, 'location, limit:5');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (3, 'Map', 'map', 0, 'location, zoom:12');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (4, 'De Lijn', 'delijn', 1, 'location, limit:5');
-INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (5, 'Twitter', 'twitter', 0, 'search, limit');
+INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (5, 'Twitter', 'twitter', 0, 'search, limit:12');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (6, 'Finance', 'finance', 0, 'primary, secondary');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (7, 'RSS', 'rss', 0, 'feed, limit');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (8, 'Signage', 'signage', 0, 'data');
-INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (9, 'Villo', 'villo', 1, 'name,location');
-INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (10, 'Velo', 'velo', 1, 'location');
+INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (9, 'Villo', 'villo', 1, 'name, location');
+INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (10, 'Velo', 'velo', 1, 'name, location');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (11, 'MIVB', 'mivb', 1, 'location, limit:5');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (12, 'Weather', 'weather', 0, 'location');
-INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (13, 'MapBox', 'mapbox', 0, 'location, zoom:12');
-INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (14, 'Route', 'route', 0, 'from,to');
+INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (13, 'MapBox', 'mapbox', 0, 'name, location, zoom:12');
+INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (14, 'Route', 'route', 0, 'from, to');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (15, 'Image', 'image', 0, 'url');
 INSERT INTO `turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (16, 'Video', 'video', 0, 'location');
 
@@ -336,7 +338,7 @@ COMMIT;
 -- Data for table `pane`
 -- -----------------------------------------------------
 START TRANSACTION;
-INSERT INTO `pane` (`id`, `infoscreen_id`, `type`, `colspan`, `duration`, `title`, `order`) VALUES (1, 1, 'list', 1, 15000, NULL, 1);
+INSERT INTO `pane` (`id`, `infoscreen_id`, `type`, `colspan`, `duration`, `title`, `template`, `order`) VALUES (1, 1, 'list', 1, 15000, NULL, NULL, 1);
 
 COMMIT;
 
@@ -353,6 +355,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 INSERT INTO `option` (`id`, `name`, `value`) VALUES (1, 'footer_rss', '{ \"name\":\"BBC EU News\", \"url\":\"http://feeds.bbci.co.uk/news/world/europe/rss.xml\" }');
-INSERT INTO `option` (`id`, `name`, `value`) VALUES (2, 'footer_rss', '{ \"name\":\"Verkeer\", \"url\":\"http://www.verkeerscentrum.be/rss/4-INC|LOS|INF|PEVT.xml\" }');
+INSERT INTO `option` (`id`, `name`, `value`) VALUES (2, 'footer_rss', '{ \"name\":\"Belgian Traffic\", \"url\":\"http://www.verkeerscentrum.be/rss/4-INC|LOS|INF|PEVT.xml\" }');
+INSERT INTO `option` (`id`, `name`, `value`) VALUES (3, 'turtle_rss_feed', '{ \"name\":\"BBC EU News\", \"url\":\"http://feeds.bbci.co.uk/news/world/europe/rss.xml\" }');
+INSERT INTO `option` (`id`, `name`, `value`) VALUES (4, 'turtle_rss_feed', '{ \"name\":\"Belgian Traffic\", \"url\":\"http://www.verkeerscentrum.be/rss/4-INC|LOS|INF|PEVT.xml\" }');
 
 COMMIT;
