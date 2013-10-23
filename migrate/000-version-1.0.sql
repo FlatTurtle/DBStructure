@@ -54,6 +54,7 @@ CREATE  TABLE IF NOT EXISTS `infoscreen` (
   `location` VARCHAR(255) NULL DEFAULT NULL ,
   `latitude` DOUBLE NULL DEFAULT NULL ,
   `longitude` DOUBLE NULL DEFAULT NULL ,
+  `wifi` VARCHAR(255) NULL DEFAULT 'none',
   PRIMARY KEY (`id`) ,
   UNIQUE INDEX `alias` (`alias` ASC) ,
   UNIQUE INDEX `pincode` (`pincode` ASC) ,
