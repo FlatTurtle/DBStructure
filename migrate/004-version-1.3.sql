@@ -1,5 +1,5 @@
 # adding new turtles
-INSERT INTO `flatturtle`.`turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (NULL, 'Offers', 'offers', '1', 'data'), (NULL, 'Price list', 'pricelist', '1', 'data'), (NULL, 'Week menu', 'weekmenu', '1', 'data');
+INSERT INTO `flatturtle`.`turtle` (`id`, `name`, `type`, `allow_left`, `options`) VALUES (NULL, 'Offers', 'offers', '1', 'data'), (NULL, 'Price list', 'pricelist', '1', 'data'), (NULL, 'Week menu', 'weekmenu', '1', 'data'), (NULL, 'Info', 'info', '0', 'data'), (NULL, 'Calendar', 'calendar', 1, 'url, header');
 
 
 # replacing power off crons
